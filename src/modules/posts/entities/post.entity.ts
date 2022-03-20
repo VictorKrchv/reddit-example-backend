@@ -14,7 +14,7 @@ export class PostEntity extends AbstractEntity {
   @ApiProperty()
   description: string;
 
-  @Column()
+  @Column({ default: 0 })
   @ApiProperty()
   visits: number;
 
