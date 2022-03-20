@@ -32,7 +32,6 @@ export class AuthController {
   }
 
   @Post('refresh')
-  @HttpCode(HttpStatus.OK)
   @ApiOperation({
     description:
       'Запрос используются при истечении access token для получения новой пары токенов',

@@ -1,8 +1,9 @@
-import { BeforeInsert, BeforeUpdate, Column, Entity } from 'typeorm';
+import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany } from 'typeorm';
 import { AbstractEntity } from '@common/abstract.entity';
 import * as bcrypt from 'bcrypt';
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
+import { PostEntity } from '@modules/posts/entities';
 
 @Entity({ name: 'users' })
 export class UserEntity extends AbstractEntity {
@@ -25,6 +26,9 @@ export class UserEntity extends AbstractEntity {
   @Column()
   @Exclude()
   password: string;
+
+  @OneToMany(() => PostEntity, (order) => order.author)
+  posts: PostEntity[];
 
   @BeforeInsert()
   @BeforeUpdate()
