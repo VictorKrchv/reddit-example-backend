@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
+import { AfterLoad, Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 import { AbstractEntity } from '@common/abstract.entity';
 import { UserEntity } from '@modules/users/entities';
 import { ApiProperty } from '@nestjs/swagger';
@@ -20,9 +20,18 @@ export class PostCommentEntity extends AbstractEntity {
 
   @OneToMany(() => PostCommentEntity, (comment) => comment.parent)
   @ApiModelProperty({ type: () => PostCommentEntity })
-  comments: PostCommentEntity[];
+  children: PostCommentEntity[];
 
   @ManyToOne(() => UserEntity, (user) => user.posts)
   @ApiModelProperty({ type: () => UserEntity })
   author: UserEntity;
+
+  @AfterLoad()
+  sortChildrenComments() {
+    this.children =
+      this.children?.sort(
+        (a, b) =>
+          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+      ) || [];
+  }
 }

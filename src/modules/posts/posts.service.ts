@@ -61,8 +61,10 @@ export class PostsService {
         ...conditions,
         parent: null,
       },
-      relations: ['comments', 'author', 'comments.author', 'post'],
-      order: { createdAt: Order.DESC },
+      relations: ['children', 'author', 'children.author', 'post'],
+      order: {
+        createdAt: Order.DESC,
+      },
     });
   }
 
