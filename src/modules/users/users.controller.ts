@@ -50,7 +50,7 @@ export class UsersController {
   @ApiCreatedResponse({ type: UserEntity })
   @UseInterceptors(ClassSerializerInterceptor)
   async me(@User() user: JwtPayload): Promise<UserEntity> {
-    return this.userService.findUserById(user.sub);
+    return this.userService.findUserById(user.id);
   }
 
   @Post('register')
@@ -100,7 +100,7 @@ export class UsersController {
     @Query('code') code: string,
     @User() user: JwtPayload,
   ): Promise<boolean> {
-    return this.userService.confirmEmailCode(+code, user.sub);
+    return this.userService.confirmEmailCode(+code, user.id);
   }
 
   @UseGuards(LocalAuthGuard)
@@ -115,7 +115,7 @@ export class UsersController {
     @Body() dto: UpdateUserPasswordDto,
     @User() user: JwtPayload,
   ): Promise<boolean> {
-    return this.userService.updatePassword(user.sub, dto);
+    return this.userService.updatePassword(user.id, dto);
   }
 
   @Post('reset-password/links')

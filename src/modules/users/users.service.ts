@@ -71,7 +71,7 @@ export class UsersService {
       });
 
       const entity = this.confirmUserCodesRepository.create({
-        userId: user.sub,
+        userId: user.id,
         code,
         expiredAt,
       });

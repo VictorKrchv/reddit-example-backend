@@ -47,6 +47,6 @@ export class AuthController {
   @ApiOperation({ description: 'Закрытие сессии пользователя' })
   @ApiCreatedResponse({ type: Boolean })
   async logout(@User() user: JwtPayload): Promise<boolean> {
-    return this.authService.logout(user.sub);
+    return this.authService.logout(user.id);
   }
 }
