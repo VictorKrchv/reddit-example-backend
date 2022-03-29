@@ -41,9 +41,9 @@ export class AuthController {
     return this.authService.refreshTokens(refreshToken);
   }
 
-  @UseGuards(AuthGuard('jwt'))
   @Post('logout')
   @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ description: 'Закрытие сессии пользователя' })
   @ApiCreatedResponse({ type: Boolean })
   async logout(@User() user: JwtPayload): Promise<boolean> {

@@ -5,12 +5,12 @@ import {
   PostsRepository,
 } from '@modules/posts/repositories';
 import { CreatePostDto } from '@modules/posts/dto/create-post.dto';
-import { PageDto, PageOptionsDto } from '@common/dto';
+import { PageDto, PageOptionsDto } from '@shared/dto';
 import { CreatePostCommentDto } from '@modules/posts/dto';
 import { FindConditions } from 'typeorm';
-import { UserEntity } from '@modules/users/entities';
-import { Order } from '@common/constants';
+import { Order } from '@shared/constants';
 import { UsersService } from '@modules/users/users.service';
+import { UsersRepository } from '@modules/users/repositories';
 
 @Injectable()
 export class PostsService {
@@ -18,12 +18,14 @@ export class PostsService {
     private postsRepository: PostsRepository,
     private postCommentRepository: PostCommentRepository,
     private usersService: UsersService,
+    private userRepository: UsersRepository,
   ) {}
 
   async getPosts(options: PageOptionsDto): Promise<PageDto<PostEntity>> {
     const queryBuilder = this.postsRepository
       .createQueryBuilder('posts')
-      .leftJoinAndSelect('posts.author', 'author');
+      .leftJoinAndSelect('posts.author', 'author')
+      .orderBy('posts.createdAt', Order.DESC);
 
     const [data, meta] = await queryBuilder.paginate(options);
     return { data, meta };
@@ -51,6 +53,57 @@ export class PostsService {
     await this.postsRepository.save(entity);
 
     return entity;
+  }
+
+  async findUserFavoritesPosts(userId: number): Promise<PostEntity[]> {
+    const user = await this.userRepository.findOne(userId, {
+      relations: ['favorites'],
+    });
+
+    return user.favorites;
+  }
+
+  async addPostToFavorites(
+    userId: number,
+    postId: number,
+  ): Promise<PostEntity> {
+    const post = await this.getPostById(postId);
+    const user = await this.userRepository.findOne(userId, {
+      relations: ['favorites'],
+    });
+
+    const isNotFavorite =
+      user.favorites.findIndex((post) => post.id === postId) === -1;
+
+    if (isNotFavorite) {
+      user.favorites.push(post);
+      post.favoritesCount++;
+      await this.postsRepository.save(post);
+      await this.userRepository.save(user);
+    }
+
+    return post;
+  }
+
+  async deletePostFromFavorites(
+    userId: number,
+    postId: number,
+  ): Promise<PostEntity> {
+    const post = await this.getPostById(postId);
+    const user = await this.userRepository.findOne(userId, {
+      relations: ['favorites'],
+    });
+
+    const postIndex = user.favorites.findIndex((post) => post.id === postId);
+
+    if (postIndex >= 0) {
+      user.favorites.splice(postIndex, 1);
+      post.favoritesCount--;
+      await this.postsRepository.save(post);
+      await this.userRepository.save(user);
+    }
+
+    return post;
   }
 
   getPostComments(
@@ -81,7 +134,7 @@ export class PostsService {
 
     return this.postCommentRepository.findOne({
       where: { id },
-      relations: ['comments', 'author'],
+      relations: ['children', 'author'],
     });
   }
 
@@ -100,7 +153,7 @@ export class PostsService {
 
     return this.postCommentRepository.findOne({
       where: { id },
-      relations: ['comments', 'author', 'parent'],
+      relations: ['children', 'author', 'parent'],
     });
   }
 }

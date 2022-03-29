@@ -7,10 +7,15 @@ import {
   PostsRepository,
 } from '@modules/posts/repositories';
 import { UsersModule } from '@modules/users/users.module';
+import { UsersRepository } from '@modules/users/repositories';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([PostsRepository, PostCommentRepository]),
+    TypeOrmModule.forFeature([
+      PostsRepository,
+      PostCommentRepository,
+      UsersRepository,
+    ]),
     forwardRef(() => UsersModule),
   ],
   providers: [PostsService],

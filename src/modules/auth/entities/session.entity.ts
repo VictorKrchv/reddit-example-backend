@@ -1,10 +1,11 @@
-import { Column, Entity } from 'typeorm';
-import { AbstractEntity } from '@common/abstract.entity';
+import { Column, Entity, ManyToOne } from 'typeorm';
+import { AbstractEntity } from '@shared/abstract.entity';
+import { UserEntity } from '@modules/users/entities';
 
 @Entity({ name: 'sessions' })
 export class SessionEntity extends AbstractEntity {
-  @Column()
-  userId: number;
+  @ManyToOne(() => UserEntity, (user) => user.sessions)
+  user: UserEntity;
 
   @Column()
   refreshToken: string;

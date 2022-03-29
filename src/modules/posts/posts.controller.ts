@@ -2,6 +2,7 @@ import {
   Body,
   ClassSerializerInterceptor,
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpStatus,
@@ -23,18 +24,25 @@ import { User } from '@modules/auth/decorators';
 import { JwtPayload } from '@modules/auth/types';
 import { PostsService } from '@modules/posts/posts.service';
 import { LocalAuthGuard } from '@modules/auth/guards';
-import { PageDto, PageOptionsDto } from '@common/dto';
 import { PostCommentEntity, PostEntity } from '@modules/posts/entities';
 import { CreatePostCommentDto } from '@modules/posts/dto';
-import { UsersService } from '@modules/users/users.service';
+import { PageDto, PageOptionsDto } from '@shared/dto';
 
 @ApiTags('Посты')
 @Controller('posts')
 export class PostsController {
-  constructor(
-    private postsService: PostsService,
-    private usersService: UsersService,
-  ) {}
+  constructor(private postsService: PostsService) {}
+
+  @Get('favorites')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(LocalAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({
+    description: 'Получить избранные посты',
+  })
+  findFavoritesPosts(@User() user: JwtPayload): Promise<PostEntity[]> {
+    return this.postsService.findUserFavoritesPosts(user.id);
+  }
 
   @Get('')
   @ApiOkResponse({ type: PostEntity })
@@ -64,6 +72,34 @@ export class PostsController {
   @ApiCreatedResponse({ type: PostEntity })
   async createPost(@Body() dto: CreatePostDto, @User() user: JwtPayload) {
     return this.postsService.createPost(dto, user.id);
+  }
+
+  @Post(':id/favorite')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(LocalAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({
+    description: 'Добавить пост в избранные',
+  })
+  addPostToFavorites(
+    @User() user: JwtPayload,
+    @Param('id') postId: number,
+  ): Promise<PostEntity> {
+    return this.postsService.addPostToFavorites(user.id, postId);
+  }
+
+  @Delete(':id/favorite')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(LocalAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({
+    description: 'Убрать пост из избранных',
+  })
+  deletePostFromFavorites(
+    @User() user: JwtPayload,
+    @Param('id') postId: number,
+  ): Promise<PostEntity> {
+    return this.postsService.deletePostFromFavorites(user.id, postId);
   }
 
   @Get(':id/comments')

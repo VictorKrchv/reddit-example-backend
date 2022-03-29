@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Body,
   ClassSerializerInterceptor,
   Controller,
@@ -15,7 +14,6 @@ import {
 } from '@nestjs/common';
 import { UsersService } from '@modules/users/users.service';
 import {
-  ApiBadRequestResponse,
   ApiBearerAuth,
   ApiCreatedResponse,
   ApiOperation,
@@ -43,10 +41,10 @@ export class UsersController {
   ) {}
 
   @Get('me')
-  @UseGuards(LocalAuthGuard)
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ description: 'Получить информацию о текущем пользователе' })
+  @UseGuards(LocalAuthGuard)
   @ApiBearerAuth()
+  @ApiOperation({ description: 'Получить информацию о текущем пользователе' })
   @ApiCreatedResponse({ type: UserEntity })
   @UseInterceptors(ClassSerializerInterceptor)
   async me(@User() user: JwtPayload): Promise<UserEntity> {
@@ -56,7 +54,6 @@ export class UsersController {
   @Post('register')
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ description: 'Регистрация пользователя' })
-  @ApiBearerAuth()
   @ApiCreatedResponse({ type: Tokens })
   async registration(
     @Req() req: Request,
@@ -77,8 +74,8 @@ export class UsersController {
   }
 
   @Post('confirm/links')
-  @UseGuards(LocalAuthGuard)
   @HttpCode(HttpStatus.OK)
+  @UseGuards(LocalAuthGuard)
   @ApiOperation({
     description: 'Отправить код подтверждения на email пользователя',
   })
@@ -88,10 +85,10 @@ export class UsersController {
     return this.userService.sendConfirmEmailCode(user);
   }
 
-  @UseGuards(LocalAuthGuard)
   @Post('confirm')
-  @ApiBearerAuth()
   @HttpCode(HttpStatus.OK)
+  @UseGuards(LocalAuthGuard)
+  @ApiBearerAuth()
   @ApiOperation({
     description: 'Подтвердить аккаунт с помощью кода отправленного на email',
   })
@@ -103,10 +100,10 @@ export class UsersController {
     return this.userService.confirmEmailCode(+code, user.id);
   }
 
-  @UseGuards(LocalAuthGuard)
   @Post('update-password')
-  @ApiBearerAuth()
   @HttpCode(HttpStatus.OK)
+  @UseGuards(LocalAuthGuard)
+  @ApiBearerAuth()
   @ApiOperation({
     description: 'Изменить пароль',
   })

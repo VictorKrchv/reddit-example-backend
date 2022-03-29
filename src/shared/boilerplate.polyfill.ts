@@ -1,7 +1,7 @@
-import { PageMetaDto, PageOptionsDto } from '@common/dto';
 import 'source-map-support/register';
 
 import { SelectQueryBuilder } from 'typeorm';
+import { PageMetaDto, PageOptionsDto } from '@shared/dto';
 
 declare module 'typeorm' {
   interface SelectQueryBuilder<Entity> {

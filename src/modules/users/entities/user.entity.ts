@@ -1,9 +1,18 @@
-import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany } from 'typeorm';
-import { AbstractEntity } from '@common/abstract.entity';
+import {
+  BeforeInsert,
+  BeforeUpdate,
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  OneToMany,
+} from 'typeorm';
+import { AbstractEntity } from '@shared/abstract.entity';
 import * as bcrypt from 'bcrypt';
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
 import { PostEntity } from '@modules/posts/entities';
+import { SessionEntity } from '@modules/auth/entities';
 
 @Entity({ name: 'users' })
 export class UserEntity extends AbstractEntity {
@@ -30,6 +39,9 @@ export class UserEntity extends AbstractEntity {
   @OneToMany(() => PostEntity, (order) => order.author)
   posts: PostEntity[];
 
+  @OneToMany(() => SessionEntity, (session) => session.user)
+  sessions: SessionEntity[];
+
   @BeforeInsert()
   @BeforeUpdate()
   async hashPassword(): Promise<void> {
@@ -37,4 +49,8 @@ export class UserEntity extends AbstractEntity {
       this.password = await bcrypt.hash(this.password, 10);
     }
   }
+
+  @ManyToMany(() => PostEntity)
+  @JoinTable()
+  favorites: PostEntity[];
 }

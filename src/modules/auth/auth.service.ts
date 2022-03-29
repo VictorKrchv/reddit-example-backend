@@ -35,7 +35,9 @@ export class AuthService {
   }
 
   async updateRtHash(userId: number, rt: string) {
-    const session = await this.sessionRepository.findOne({ userId });
+    const session = await this.sessionRepository.findOne({
+      user: { id: userId },
+    });
 
     if (session) {
       await this.sessionRepository.update(
@@ -44,7 +46,7 @@ export class AuthService {
       );
     } else {
       const session = this.sessionRepository.create({
-        userId,
+        user: { id: userId },
         refreshToken: rt,
       });
       await this.sessionRepository.save(session);
@@ -77,7 +79,7 @@ export class AuthService {
   }
 
   async deleteUserRefreshTokens(userId: number) {
-    return await this.sessionRepository.delete({ userId });
+    return await this.sessionRepository.delete({ user: { id: userId } });
   }
 
   async refreshTokens(refreshToken): Promise<Tokens> {
@@ -103,7 +105,7 @@ export class AuthService {
   }
 
   async logout(userId: number) {
-    await this.sessionRepository.delete({ userId });
+    await this.sessionRepository.delete({ user: { id: userId } });
     return true;
   }
 }

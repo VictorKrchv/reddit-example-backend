@@ -3,10 +3,10 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { SharedModule } from '@shared/shared.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigService } from '@shared/services/config.service';
 import { AuthModule } from '@modules/auth/auth.module';
 import { UsersModule } from '@modules/users/users.module';
 import { PostsModule } from '@modules/posts/posts.module';
+import ormconfig from './ormconfig';
 
 @Module({
   imports: [
@@ -14,11 +14,7 @@ import { PostsModule } from '@modules/posts/posts.module';
     AuthModule,
     PostsModule,
     SharedModule,
-    TypeOrmModule.forRootAsync({
-      imports: [SharedModule],
-      useFactory: (configService: ConfigService) => configService.typeOrmConfig,
-      inject: [ConfigService],
-    }),
+    TypeOrmModule.forRoot(ormconfig),
   ],
   controllers: [AppController],
   providers: [AppService],

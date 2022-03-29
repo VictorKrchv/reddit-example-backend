@@ -1,5 +1,5 @@
 import { AfterLoad, Column, Entity, ManyToOne, OneToMany } from 'typeorm';
-import { AbstractEntity } from '@common/abstract.entity';
+import { AbstractEntity } from '@shared/abstract.entity';
 import { UserEntity } from '@modules/users/entities';
 import { ApiProperty } from '@nestjs/swagger';
 import { ApiModelProperty } from '@nestjs/swagger/dist/decorators/api-model-property.decorator';

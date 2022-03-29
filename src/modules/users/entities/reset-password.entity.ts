@@ -1,5 +1,5 @@
 import { Column, Entity, UpdateDateColumn } from 'typeorm';
-import { AbstractEntity } from '@common/abstract.entity';
+import { AbstractEntity } from '@shared/abstract.entity';
 
 @Entity({ name: 'reset-password-codes' })
 export class ResetPasswordEntity extends AbstractEntity {

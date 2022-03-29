@@ -1,7 +1,5 @@
 import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { SharedModule } from '@shared/shared.module';
-import { ConfigService } from '@shared/services/config.service';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { BadRequestException, ValidationPipe } from '@nestjs/common';
 import { HttpExceptionFilter } from './filters/bad-request.filter';
@@ -39,8 +37,7 @@ async function bootstrap() {
   //   }),
   // );
 
-  const configService = app.select(SharedModule).get(ConfigService);
-  const port = configService.getNumber('PORT');
+  const port = +process.env.PORT;
 
   await app.listen(port);
   console.info(`server running on port ${port}`);
