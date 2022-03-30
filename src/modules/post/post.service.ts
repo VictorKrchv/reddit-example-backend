@@ -1,23 +1,22 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { PostCommentEntity, PostEntity } from '@modules/posts/entities';
+import { PostCommentEntity, PostEntity } from '@modules/post/entities';
 import {
   PostCommentRepository,
   PostsRepository,
-} from '@modules/posts/repositories';
-import { CreatePostDto } from '@modules/posts/dto/create-post.dto';
+} from '@modules/post/repositories';
 import { PageDto, PageOptionsDto } from '@shared/dto';
-import { CreatePostCommentDto } from '@modules/posts/dto';
+import { CreatePostCommentDto, CreatePostDto } from '@modules/post/dto';
 import { FindConditions } from 'typeorm';
 import { Order } from '@shared/constants';
-import { UsersService } from '@modules/users/users.service';
-import { UsersRepository } from '@modules/users/repositories';
+import { UsersRepository } from '@modules/user/repositories';
+import { UserService } from '@modules/user/user.service';
 
 @Injectable()
-export class PostsService {
+export class PostService {
   constructor(
     private postsRepository: PostsRepository,
     private postCommentRepository: PostCommentRepository,
-    private usersService: UsersService,
+    private userService: UserService,
     private userRepository: UsersRepository,
   ) {}
 

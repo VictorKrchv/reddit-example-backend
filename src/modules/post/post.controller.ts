@@ -19,19 +19,19 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
-import { CreatePostDto } from '@modules/posts/dto/create-post.dto';
+import { CreatePostDto } from '@modules/post/dto/create-post.dto';
 import { User } from '@modules/auth/decorators';
 import { JwtPayload } from '@modules/auth/types';
-import { PostsService } from '@modules/posts/posts.service';
+import { PostService } from '@modules/post/post.service';
 import { LocalAuthGuard } from '@modules/auth/guards';
-import { PostCommentEntity, PostEntity } from '@modules/posts/entities';
-import { CreatePostCommentDto } from '@modules/posts/dto';
+import { PostCommentEntity, PostEntity } from '@modules/post/entities';
+import { CreatePostCommentDto } from '@modules/post/dto';
 import { PageDto, PageOptionsDto } from '@shared/dto';
 
 @ApiTags('Посты')
 @Controller('posts')
-export class PostsController {
-  constructor(private postsService: PostsService) {}
+export class PostController {
+  constructor(private postService: PostService) {}
 
   @Get('favorites')
   @HttpCode(HttpStatus.OK)
@@ -41,7 +41,7 @@ export class PostsController {
     description: 'Получить избранные посты',
   })
   findFavoritesPosts(@User() user: JwtPayload): Promise<PostEntity[]> {
-    return this.postsService.findUserFavoritesPosts(user.id);
+    return this.postService.findUserFavoritesPosts(user.id);
   }
 
   @Get('')
@@ -51,7 +51,7 @@ export class PostsController {
   async getPosts(
     @Query() options: PageOptionsDto,
   ): Promise<PageDto<PostEntity>> {
-    return this.postsService.getPosts(options);
+    return this.postService.getPosts(options);
   }
 
   @Get(':id')
@@ -59,7 +59,7 @@ export class PostsController {
   @HttpCode(HttpStatus.OK)
   @UseInterceptors(ClassSerializerInterceptor)
   async getPostById(@Param('id') id: string): Promise<PostEntity> {
-    return this.postsService.getPostById(Number(id));
+    return this.postService.getPostById(Number(id));
   }
 
   @Post('')
@@ -71,7 +71,7 @@ export class PostsController {
   })
   @ApiCreatedResponse({ type: PostEntity })
   async createPost(@Body() dto: CreatePostDto, @User() user: JwtPayload) {
-    return this.postsService.createPost(dto, user.id);
+    return this.postService.createPost(dto, user.id);
   }
 
   @Post(':id/favorite')
@@ -85,7 +85,7 @@ export class PostsController {
     @User() user: JwtPayload,
     @Param('id') postId: number,
   ): Promise<PostEntity> {
-    return this.postsService.addPostToFavorites(user.id, postId);
+    return this.postService.addPostToFavorites(user.id, postId);
   }
 
   @Delete(':id/favorite')
@@ -99,7 +99,7 @@ export class PostsController {
     @User() user: JwtPayload,
     @Param('id') postId: number,
   ): Promise<PostEntity> {
-    return this.postsService.deletePostFromFavorites(user.id, postId);
+    return this.postService.deletePostFromFavorites(user.id, postId);
   }
 
   @Get(':id/comments')
@@ -109,7 +109,7 @@ export class PostsController {
   async getPostCommentsById(
     @Param('id') id: string,
   ): Promise<PostCommentEntity[]> {
-    return this.postsService.getPostComments({ post: { id: Number(id) } });
+    return this.postService.getPostComments({ post: { id: Number(id) } });
   }
 
   @Post(':id/comments')
@@ -123,7 +123,7 @@ export class PostsController {
     @Body() dto: CreatePostCommentDto,
     @User() jwtPayload: JwtPayload,
   ): Promise<PostCommentEntity> {
-    const comment = await this.postsService.createComment(
+    const comment = await this.postService.createComment(
       Number(postId),
       jwtPayload.id,
       dto,
@@ -143,11 +143,6 @@ export class PostsController {
     @Body() dto: CreatePostCommentDto,
     @User() jwtPayload: JwtPayload,
   ): Promise<PostCommentEntity> {
-    return this.postsService.replyComment(
-      postId,
-      commentId,
-      jwtPayload.id,
-      dto,
-    );
+    return this.postService.replyComment(postId, commentId, jwtPayload.id, dto);
   }
 }

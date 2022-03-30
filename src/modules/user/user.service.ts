@@ -6,27 +6,27 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { UserEntity } from '@modules/users/entities/user.entity';
-import { UsersRepository } from '@modules/users/repositories/users.repository';
-import { UserRegisterDto } from '@modules/users/dto/user-register.dto';
+import { UserEntity } from '@modules/user/entities/user.entity';
+import { UsersRepository } from '@modules/user/repositories/users.repository';
+import { UserRegisterDto } from '@modules/user/dto/user-register.dto';
 import { isEmail } from 'class-validator';
-import { EmailSingle } from '@modules/users/types';
+import { EmailSingle } from '@modules/user/types';
 import { MailService } from '@shared/services/mail.service';
 import { JwtPayload } from '@modules/auth/types';
-import { ConfirmUserCodesRepository } from '@modules/users/repositories/confirm-user-codes.repository';
+import { ConfirmUserCodesRepository } from '@modules/user/repositories/confirm-user-codes.repository';
 import { generateRandomNumber } from '@shared/libs/generate-random-number';
 import { addMinutes } from 'date-fns';
-import { ResetPasswordCodesRepository } from '@modules/users/repositories';
+import { ResetPasswordCodesRepository } from '@modules/user/repositories';
 import { v4 as uuidv4 } from 'uuid';
 import * as bcrypt from 'bcrypt';
 import {
   ResetPasswordByCodeDto,
   ResetPasswordSendInstructionDto,
-} from '@modules/users/dto';
-import { UpdateUserPasswordDto } from '@modules/users/dto/update-user-password.dto';
+} from '@modules/user/dto';
+import { UpdateUserPasswordDto } from '@modules/user/dto/update-user-password.dto';
 
 @Injectable()
-export class UsersService {
+export class UserService {
   constructor(
     private userRepository: UsersRepository,
     private confirmUserCodesRepository: ConfirmUserCodesRepository,

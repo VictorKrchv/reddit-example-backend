@@ -4,15 +4,16 @@ import { AppService } from './app.service';
 import { SharedModule } from '@shared/shared.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from '@modules/auth/auth.module';
-import { UsersModule } from '@modules/users/users.module';
-import { PostsModule } from '@modules/posts/posts.module';
+import { UserModule } from '@modules/user/user.module';
+import { PostModule } from '@modules/post/post.module';
+
 import ormconfig from './ormconfig';
 
 @Module({
   imports: [
-    UsersModule,
+    UserModule,
     AuthModule,
-    PostsModule,
+    PostModule,
     SharedModule,
     TypeOrmModule.forRoot(ormconfig),
   ],

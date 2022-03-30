@@ -1,13 +1,13 @@
 import { forwardRef, Module } from '@nestjs/common';
-import { UsersService } from './users.service';
-import { UsersController } from './users.controller';
+import { UserService } from './user.service';
+import { UserController } from './user.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from '@modules/auth/auth.module';
 import {
   ConfirmUserCodesRepository,
   ResetPasswordCodesRepository,
   UsersRepository,
-} from '@modules/users/repositories';
+} from '@modules/user/repositories';
 
 @Module({
   imports: [
@@ -18,8 +18,8 @@ import {
       ResetPasswordCodesRepository,
     ]),
   ],
-  controllers: [UsersController],
-  exports: [UsersService],
-  providers: [UsersService],
+  controllers: [UserController],
+  exports: [UserService],
+  providers: [UserService],
 })
-export class UsersModule {}
+export class UserModule {}

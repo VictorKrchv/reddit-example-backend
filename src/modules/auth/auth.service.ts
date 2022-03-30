@@ -1,16 +1,16 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { AuthCredentialsDto } from '@modules/auth/dto/auth-credentials.dto';
-import { UserEntity } from '@modules/users/entities/user.entity';
-import { UsersService } from '@modules/users/users.service';
+import { UserEntity } from '@modules/user/entities/user.entity';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload, Tokens } from '@modules/auth/types';
 import { SessionsRepository } from '@modules/auth/repositories/sessions.repository';
+import { UserService } from '@modules/user/user.service';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private usersService: UsersService,
+    private userService: UserService,
     private jwtService: JwtService,
     private sessionRepository: SessionsRepository,
   ) {}
@@ -60,7 +60,7 @@ export class AuthService {
   }
 
   async validateUser(user: AuthCredentialsDto): Promise<UserEntity> {
-    const storedUser = await this.usersService.findUserByEmail(user.email);
+    const storedUser = await this.userService.findUserByEmail(user.email);
 
     if (!storedUser) {
       throw new ForbiddenException('Access denied');

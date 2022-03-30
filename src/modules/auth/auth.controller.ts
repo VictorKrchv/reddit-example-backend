@@ -13,14 +13,14 @@ import { AuthCredentialsDto } from '@modules/auth/dto/auth-credentials.dto';
 import { JwtPayload, Tokens } from '@modules/auth/types';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from '@modules/auth/decorators';
-import { UsersService } from '@modules/users/users.service';
+import { UserService } from '@modules/user/user.service';
 
 @ApiTags('Авторизация')
 @Controller('auth')
 export class AuthController {
   constructor(
     private authService: AuthService,
-    private userService: UsersService,
+    private userService: UserService,
   ) {}
 
   @Post('login')

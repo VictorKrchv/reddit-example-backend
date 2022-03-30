@@ -1,6 +1,6 @@
 import { Column, Entity, ManyToOne } from 'typeorm';
 import { AbstractEntity } from '@shared/abstract.entity';
-import { UserEntity } from '@modules/users/entities';
+import { UserEntity } from '@modules/user/entities';
 
 @Entity({ name: 'sessions' })
 export class SessionEntity extends AbstractEntity {

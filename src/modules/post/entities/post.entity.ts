@@ -1,8 +1,8 @@
 import { Column, Entity, ManyToOne } from 'typeorm';
 import { AbstractEntity } from '@shared/abstract.entity';
-import { UserEntity } from '@modules/users/entities';
 import { ApiProperty } from '@nestjs/swagger';
 import { ApiModelProperty } from '@nestjs/swagger/dist/decorators/api-model-property.decorator';
+import { UserEntity } from '@modules/user/entities';
 
 @Entity({ name: 'posts' })
 export class PostEntity extends AbstractEntity {

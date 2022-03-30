@@ -11,7 +11,7 @@ import { AbstractEntity } from '@shared/abstract.entity';
 import * as bcrypt from 'bcrypt';
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
-import { PostEntity } from '@modules/posts/entities';
+import { PostEntity } from '@modules/post/entities';
 import { SessionEntity } from '@modules/auth/entities';
 
 @Entity({ name: 'users' })

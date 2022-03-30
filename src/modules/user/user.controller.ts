@@ -12,7 +12,7 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { UsersService } from '@modules/users/users.service';
+import { UserService } from '@modules/user/user.service';
 import {
   ApiBearerAuth,
   ApiCreatedResponse,
@@ -21,22 +21,22 @@ import {
 } from '@nestjs/swagger';
 import { JwtPayload, Tokens } from '@modules/auth/types';
 import { AuthService } from '@modules/auth/auth.service';
-import { EmailSingle } from '@modules/users/types';
+import { EmailSingle } from '@modules/user/types';
 import { User } from '@modules/auth/decorators';
 import { LocalAuthGuard } from '@modules/auth/guards';
 import {
   ResetPasswordByCodeDto,
   ResetPasswordSendInstructionDto,
   UserRegisterDto,
-} from '@modules/users/dto';
-import { UserEntity } from '@modules/users/entities';
-import { UpdateUserPasswordDto } from '@modules/users/dto/update-user-password.dto';
+  UpdateUserPasswordDto,
+} from '@modules/user/dto';
+import { UserEntity } from '@modules/user/entities';
 
 @ApiTags('Пользователь')
 @Controller('users')
-export class UsersController {
+export class UserController {
   constructor(
-    private userService: UsersService,
+    private userService: UserService,
     private authService: AuthService,
   ) {}
 
